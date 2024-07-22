@@ -24,5 +24,7 @@ COPY . .
 RUN mkdir -p /root/.config/DrissionPage && \
     echo '{"chrome_path":"/usr/bin/google-chrome-stable"}' > /root/.config/DrissionPage/config.json
 
+ENV CHROMIUM_FLAGS="--disable-gpu --no-sandbox --disable-dev-shm-usage"
+
 # 実行コマンド
 CMD gunicorn --worker-class eventlet -w 1 app:app
