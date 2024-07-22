@@ -17,7 +17,8 @@ def create_page():
     co.set_argument('--no-sandbox')
     co.set_argument('--disable-dev-shm-usage')
     co.set_argument('--guest')
-    co.set_executable_path(os.environ.get('CHROME_BIN', '/usr/bin/google-chrome-stable'))
+    chrome_path = os.environ.get('CHROME_BIN', '/usr/bin/google-chrome-stable')
+    co.binary_location = chrome_path
     return ChromiumPage(co)
 
 def login(page, userId, password):
