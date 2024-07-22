@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 from DrissionPage import ChromiumOptions, ChromiumPage
 from flask_socketio import SocketIO, emit
-import threading, time
+import threading, time, os
 
 app = Flask(__name__)
 socketio = SocketIO(app, async_mode='eventlet')
@@ -9,6 +9,16 @@ socketio = SocketIO(app, async_mode='eventlet')
 
 last_request_time = 0
 RATE_LIMIT = 10
+
+def create_page():
+    co = ChromiumOptions()
+    co.incognito()
+    co.headless()
+    co.set_argument('--no-sandbox')
+    co.set_argument('--disable-dev-shm-usage')
+    co.set_argument('--guest')
+    co.set_executable_path(os.environ.get('CHROME_BIN', '/usr/bin/google-chrome-stable'))
+    return ChromiumPage(co)
 
 def login(page, userId, password):
     try:
@@ -100,13 +110,7 @@ def index():
 
         last_request_time = current_time
 
-        co = ChromiumOptions()
-        co.incognito()
-        co.headless()
-        co.set_argument('--no-sandbox')
-        co.set_argument('--guest')
-
-        page = ChromiumPage()
+        page = createpage()
 
         login(page, userId, password)
         novels, novel_num = get_favorites(page)
