@@ -29,7 +29,6 @@ def get_favorites(page):
     try:
         page.get("https://syosetu.org/?mode=favo")
         novel_num = int(page.ele(".heading").text[3:-1])
-        novel_num = 10
         if novel_num % 10 == 0:
             page_num = novel_num // 10
         else:
