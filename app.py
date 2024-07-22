@@ -44,6 +44,18 @@ def get_favorites(page):
         print(f"お気に入り小説取得エラー: {e}")
         return novels, 0
 
+def add_tag(page, title):
+    tag_input = page.ele('#singleFieldTags2')
+    if tag_input:
+        current_tags = tag_input.attr('value')
+        tags = current_tags.split(',') if current_tags else []
+        
+        if title not in tags:
+            tags.append(title)
+            
+            new_tags = ','.join(tags)
+            tag_input.input(new_tags)
+
 def register_details(page, novels, no_note, no_tag, novel_num):
     for idx, novel in enumerate(novels, start=1):
         try:
@@ -60,14 +72,7 @@ def register_details(page, novels, no_note, no_tag, novel_num):
                     textfield.input(text_to_input)
 
             if not no_tag:
-                script = f"""
-                    var ul = document.querySelector('ul.tagit.ui-widget.ui-widget-content.ui-corner-all');
-                    var exists = Array.from(ul.children).some(li => li.childNodes[0].textContent === '{title}');
-                    if (!exists) {{
-                        document.getElementById('singleFieldTags2').value += ',{title}'
-                    }}
-                """
-                page.run_js(script)
+                add_tag(page, title)
 
             time.sleep(1)
             page.ele("@value=詳細内容登録").click()
