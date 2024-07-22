@@ -1,4 +1,4 @@
-Flask
-Flask-SocketIO
-DrissionPage
-Werkzeug
+Flask==3.0.3
+Flask-SocketIO==5.3.6
+DrissionPage==4.0.5.6
+Werkzeug==3.0.3
