@@ -110,7 +110,7 @@ def index():
 
         last_request_time = current_time
 
-        page = createpage()
+        page = create_page()
 
         login(page, userId, password)
         novels, novel_num = get_favorites(page)
