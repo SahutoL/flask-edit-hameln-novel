@@ -4,7 +4,7 @@ from flask_socketio import SocketIO, emit
 import threading, time, os
 
 app = Flask(__name__)
-socketio = SocketIO(app, async_mode='eventlet')
+socketio = SocketIO(app)
 
 
 last_request_time = 0
