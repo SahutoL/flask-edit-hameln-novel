@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-from DrissionPage import ChromiumOptions, ChromiumPage
+from DrissionPage import WebPage
 from flask_socketio import SocketIO, emit
 import threading, time, os
 
@@ -9,15 +9,6 @@ socketio = SocketIO(app, async_mode='eventlet')
 
 last_request_time = 0
 RATE_LIMIT = 10
-
-def create_page():
-    co = ChromiumOptions()
-    co.incognito()
-    co.headless()
-    co.set_argument('--no-sandbox')
-    co.set_argument('--disable-dev-shm-usage')
-    co.set_argument('--guest')
-    return ChromiumPage(co)
 
 def login(page, userId, password):
     try:
@@ -30,7 +21,7 @@ def login(page, userId, password):
         time.sleep(2)
     except Exception as e:
         print(f"ログインエラー: {e}")
-        page.quit()
+        
         return
 
 def get_favorites(page):
@@ -89,7 +80,6 @@ def register_details(page, novels, no_note, no_tag, novel_num):
             print(f'対象の小説は削除されているか或は非公開に設定されています。\n https://www.google.com/search?q=site:syosetu.org%20nid={novel} にて該当作品の情報が見つかるかもしれません')
     time.sleep(1)
     socketio.emit('progress', {'data': '処理が完了しました'})
-    page.quit()
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -109,15 +99,12 @@ def index():
 
         last_request_time = current_time
 
-        page = create_page()
+        page = WebPage()
 
         login(page, userId, password)
         novels, novel_num = get_favorites(page)
         if novels:
             threading.Thread(target=register_details, args=(page, novels, no_note, no_tag, novel_num)).start()
-        else:
-            page.quit()
-
         return jsonify({"message": "処理が開始されました。進捗はリアルタイムで表示されます。"})
 
     return render_template('index.html')
