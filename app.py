@@ -1,11 +1,9 @@
 from flask import Flask, request, jsonify, render_template
 from DrissionPage import ChromiumOptions, ChromiumPage
 from flask_socketio import SocketIO, emit
-from werkzeug.security import generate_password_hash, check_password_hash
-import secrets, threading, time
+import threading, time
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = secrets.token_hex(16)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 
@@ -132,4 +130,4 @@ def handle_disconnect():
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, allow_unsafe_werkzeug=True)
+    socketio.run(app, debug=False, allow_unsafe_werkzeug=False)
