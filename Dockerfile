@@ -20,5 +20,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # アプリケーションコードのコピー
 COPY . .
 
+# DrissionPage設定ファイルの作成
+RUN mkdir -p /root/.config/DrissionPage && \
+    echo '{"chrome_path":"/usr/bin/google-chrome-stable"}' > /root/.config/DrissionPage/config.json
+
 # 実行コマンド
 CMD gunicorn --worker-class eventlet -w 1 app:app
